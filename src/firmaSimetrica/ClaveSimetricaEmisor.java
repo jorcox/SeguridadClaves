@@ -1,6 +1,8 @@
 package firmaSimetrica;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -9,6 +11,7 @@ import java.security.KeyStore.PasswordProtection;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Scanner;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -18,12 +21,32 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 public class ClaveSimetricaEmisor {
-		public static void main(String[] argv) {
+		public static void main(String[] args) {
 			
 			try{
-
+				long beKey = System.currentTimeMillis();
 			    KeyGenerator keygenerator = KeyGenerator.getInstance("DES");
 			    SecretKey clavePrivada = keygenerator.generateKey();
+			    long afKey = System.currentTimeMillis();			    
+			    System.out.println("Tiempo de generacion de claves de 56 bytes -> " + (afKey - beKey) );
+			    
+			    beKey = System.currentTimeMillis();
+			    keygenerator = KeyGenerator.getInstance("DES");
+			    SecretKey clavePrivada56 = keygenerator.generateKey();
+			    afKey = System.currentTimeMillis();			    
+			    System.out.println("Tiempo de generacion de claves de 56 bytes -> " + (afKey - beKey) );
+			    
+			    beKey = System.currentTimeMillis();
+			    keygenerator = KeyGenerator.getInstance("AES");
+			    SecretKey clavePrivada128 = keygenerator.generateKey();
+			    afKey = System.currentTimeMillis();			    
+			    System.out.println("Tiempo de generacion de claves de 128 bytes -> " + (afKey - beKey) );
+			    
+			    beKey = System.currentTimeMillis();
+			    keygenerator = KeyGenerator.getInstance("HmacSHA256");
+			    SecretKey clavePrivada256 = keygenerator.generateKey();
+			    afKey = System.currentTimeMillis();			    
+			    System.out.println("Tiempo de generacion de claves de 256 bytes -> " + (afKey - beKey) );
 			    
 			    Cipher desCipher;
 
@@ -32,19 +55,41 @@ public class ClaveSimetricaEmisor {
 			    
 			    // Initialize the cipher for encryption
 			    desCipher.init(Cipher.ENCRYPT_MODE, clavePrivada);
-
-			    //sensitive information
-			    byte[] text = "Nadie puede verme. Soy Nicolas Maduro.".getBytes();
-
-			    System.out.println("Texto en bytes : " + text);
-			    System.out.println("Texto : " + new String(text));
-			   
-			    // Encrypt the text
-			    byte[] textEncrypted = desCipher.doFinal(text);
-
-			    System.out.println("Texto encriptado : " + textEncrypted);
-
 			    
+			    Scanner listaFicheros = new Scanner(new File(args[0]));
+			    int cuenta = 0;
+			    while(listaFicheros.hasNextLine()){
+			    	FileInputStream inputText = new FileInputStream(listaFicheros.nextLine());
+			    	
+			    	cuenta++;
+			    	
+			    	byte[] text = new byte[inputText.available()];
+				    //sensitive information
+				    //byte[] text = "Nadie puede verme. Soy Nicolas Maduro.".getBytes();
+			    	
+			    	inputText.read(text);
+			    	inputText.close();
+	
+				    System.out.println("Texto " + cuenta + " en bytes : " + text);
+				    System.out.println("Texto " + cuenta + " : " + new String(text));
+				   
+				    long beEnc = System.currentTimeMillis();
+				    // Encrypt the text
+				    byte[] textEncrypted = desCipher.doFinal(text);
+				    long afEnc = System.currentTimeMillis();
+				    
+				    System.out.println("Tiempo de encriptacion del texto " + cuenta + " -> " + (afEnc - beEnc) );
+	
+				    System.out.println("Texto " + cuenta + " encriptado : " + textEncrypted);
+				    
+		        	/*
+		        	 * Guardando el fichero encriptado
+		        	 */
+		        	FileOutputStream sigfos = new FileOutputStream("textoEncriptado" + cuenta);
+		        	sigfos.write(textEncrypted);
+		        	sigfos.close();
+
+				}
 			    /*
 			     * Guardo la clave secreta en un fichero
 			     */
@@ -54,12 +99,7 @@ public class ClaveSimetricaEmisor {
 	        	keyfos.close();
 	        	
 	        	
-	        	/*
-	        	 * Guardando el fichero encriptado
-	        	 */
-	        	FileOutputStream sigfos = new FileOutputStream("textoEncriptado");
-	        	sigfos.write(textEncrypted);
-	        	sigfos.close();
+
 			    
 
 			    

@@ -19,16 +19,35 @@ class GenSig {
         	 * Fuente de aleatoriedad
         	 */
         	SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
-        	/*
-        	 * 1024 es el tamaño de la clave
-        	 */
-        	keyGen.initialize(1024, random);
-        	
+        	        	
         	Signature dsa = Signature.getInstance("SHA1withDSA", "SUN"); 
-
+        	
+        	long beKey = System.currentTimeMillis();
+        	keyGen.initialize(512, random);
         	KeyPair pair = keyGen.generateKeyPair();
         	PrivateKey priv = pair.getPrivate();
         	PublicKey pub = pair.getPublic();
+        	long afKey = System.currentTimeMillis();
+        	
+        	System.out.println("Tiempo de generacion de claves de 512 bytes -> " + (afKey - beKey) );
+        	
+        	beKey = System.currentTimeMillis();
+        	keyGen.initialize(1024, random);
+        	pair = keyGen.generateKeyPair();
+        	PrivateKey priv1024 = pair.getPrivate();
+        	PublicKey pub1024 = pair.getPublic();
+        	afKey = System.currentTimeMillis();
+        	
+        	System.out.println("Tiempo de generacion de claves de 1024 bytes -> " + (afKey - beKey) );
+        	
+        	beKey = System.currentTimeMillis();
+        	keyGen.initialize(2048, random);
+        	pair = keyGen.generateKeyPair();
+        	PrivateKey priv2048 = pair.getPrivate();
+        	PublicKey pub2048 = pair.getPublic();
+        	afKey = System.currentTimeMillis();
+        	
+        	System.out.println("Tiempo de generacion de claves de 2048 bytes -> " + (afKey - beKey) );
         	
         	dsa.initSign(priv);
         	
@@ -47,7 +66,14 @@ class GenSig {
         	/*
         	 * Firma final
         	 */        	
+        	long beSign = System.currentTimeMillis();
         	byte[] realSig = dsa.sign();
+        	long afSign = System.currentTimeMillis();
+        	
+        	System.out.println("Tiempo de firma -> " + (afSign - beSign) );
+        	
+        	
+        	
         	
         	/*
         	 * Guardando la firma final en fichero
