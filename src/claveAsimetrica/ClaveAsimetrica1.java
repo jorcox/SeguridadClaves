@@ -1,3 +1,12 @@
+/**
+ * @author Javier Beltran Jorba
+ * @author Jorge Cancer Gil
+ * 
+ *  Esta clase utiliza cifrado RSA/ECB/PKCS1Padding para cifrar y descifrar
+ *  25 documentos que componen una parte de la obra Sherlock Holmes.
+ *  Se ha elegido RSA por ser uno de los algoritmos mas famosos y utilizados, 
+ *  y porque la libreria de Java Security lo implementa.
+ */
 package claveAsimetrica;
 
 import java.io.BufferedReader;

@@ -1,3 +1,12 @@
+/**
+ * @author Javier Beltran Jorba
+ * @author Jorge Cancer Gil
+ * 
+ *  Esta clase utiliza cifrado RSA/ECB/PKCS1Padding para cifrar y descifrar
+ *  100 mensajes cuyo contenido es aleatorio y cuyo tamaño es el maximo permitido
+ *  por RSA segun la longitud de sus claves. En concreto, la cuenta es:
+ *  (tam_clave_rsa) / 8. (-11 en caso de padding, y en este caso hay).
+ */
 package claveAsimetrica;
 
 import java.security.InvalidKeyException;
