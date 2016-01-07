@@ -7,19 +7,36 @@ class GenSig {
 
     public static void main(String[] args) {
 
-        /* Generate a DSA signature */
-
-        if (args.length != 1) {
-            System.out.println("Usage: GenSig nameOfFileToSign");
+		/*
+		 * Utilizamos algoritmo DSA para generar las claves 1024 b
+		 * (otras opcion RSA 1024/2048b )
+		 * 
+		 * Para la fuente de aleatoriedad usamos SHA1PRNG de SUN
+		 * (SHA-1 Pseudo-Random Number Generation es un algoritmo 
+		 *  de generación de números pseudoaleatorios utilizados)
+		 * 
+		 * Para firmar usamos SHA1withDSA, es decir, 
+		 * funcion hash SHA (El SHA es una familia de funciones hash) 
+		 * con algoritmo DSA.
+		 * 
+		 */
+    	
+      
+        if (args.length < 1) {
+            System.out.println("Uso-> ficheroAFirmar");           
         }
         else try {
-
+			/*
+			 * Generacion de las claves
+			 */
         	KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
         	/*
         	 * Fuente de aleatoriedad
         	 */
         	SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
-        	        	
+        	/*
+        	 * Instanciacion de la firma 
+        	 */
         	Signature dsa = Signature.getInstance("SHA1withDSA", "SUN"); 
         	
         	long beKey = System.currentTimeMillis();

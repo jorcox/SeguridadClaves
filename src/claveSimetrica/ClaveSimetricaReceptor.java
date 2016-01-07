@@ -1,4 +1,4 @@
-package firmaSimetrica;
+package claveSimetrica;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +13,17 @@ public class ClaveSimetricaReceptor {
 
 	public static void main(String[] args) {
 		
+		if(args.length<1) 
+			System.out.println("Uso -> Arg1 = listaFicherosDesencriptar Arg2 = ClavePrivada ");
 		
+		/*
+		 * Utilizamos algoritmo DES para generar la keyFactory 
+		 * y leer la clave privada 56 b
+		 * 
+		 * Para descifrar usamos DES/ECB/PKCS5Padding, es decir, 
+		 * algoritmo DES con el modo ElectronicCodeBook con relleno PCKS5.
+		 * 
+		 */
 			
 		try {
 			/*

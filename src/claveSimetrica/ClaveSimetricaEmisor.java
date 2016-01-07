@@ -1,4 +1,4 @@
-package firmaSimetrica;
+package claveSimetrica;
 
 
 import java.io.File;
@@ -22,6 +22,17 @@ import javax.crypto.SecretKey;
 
 public class ClaveSimetricaEmisor {
 		public static void main(String[] args) {
+			
+			if(args.length<1) 
+				System.out.println("Uso -> Arg1 = listaFicherosEncriptar ");
+			/*
+			 * Utilizamos algoritmo DES para generar la clave privada 56 b
+			 * (otras opciones AES o HmacSHA256)
+			 * 
+			 * Para cifrar usamos DES/ECB/PKCS5Padding, es decir, 
+			 * algoritmo DES con el modo ElectronicCodeBook con relleno PCKS5.
+			 * 
+			 */
 			
 			try{
 				long beKey = System.currentTimeMillis();
@@ -85,7 +96,7 @@ public class ClaveSimetricaEmisor {
 		        	/*
 		        	 * Guardando el fichero encriptado
 		        	 */
-		        	FileOutputStream sigfos = new FileOutputStream("textoEncriptado" + cuenta);
+		        	FileOutputStream sigfos = new FileOutputStream("simetrica/cifrados/textoEncriptado" + cuenta);
 		        	sigfos.write(textEncrypted);
 		        	sigfos.close();
 
